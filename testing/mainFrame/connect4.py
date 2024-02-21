@@ -121,8 +121,8 @@ while not game_over:
 		#if event.type == pygame.MOUSEBUTTONDOWN:
 		if ready == 1:
 			#Display to terminal who's turn it is, will eventually need to be communicated with ESP and LED
-			pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
-			print("Player " + str(turn) + " turn")
+			#pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
+			print("Player " + str(turn + 1) + " turn")
 			#print(event.pos)
 			# Ask for Player 1 Input
 			if turn == 0:
@@ -138,6 +138,7 @@ while not game_over:
 						label = myfont.render("Player 1 wins!!", 1, RED)
 						screen.blit(label, (40,10))
 						game_over = True
+						print("Player 1 wins")
 
 
 			# # Ask for Player 2 Input
@@ -161,6 +162,7 @@ while not game_over:
 						label = myfont.render("Player 2 wins!!", 1, YELLOW)
 						screen.blit(label, (40,10))
 						game_over = True
+						print("Player 2 wins")
 
 			print_board(board)
 			draw_board(board)
