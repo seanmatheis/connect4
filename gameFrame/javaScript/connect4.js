@@ -11,7 +11,9 @@ var gameOver = false;
 var board;
 
 //Array use to represent current row (5 first, then counting down)
-var currColumns
+var currColumns;
+
+
 
 var rows = 6;
 var columns = 7;
@@ -26,6 +28,7 @@ window.onload = function(){
 function setGame(){
     board = [];
     currColumns = [5, 5, 5, 5, 5, 5, 5];
+
 
     for(let r = 0; r < rows; r++)
     {
@@ -143,12 +146,12 @@ function checkWinner(){
 
 function setWinner(r, c){
     //Change to status instead of just winner
-    let status = document.getElementById("status");
+    let currStatus = document.getElementById("currStatus");
     if(board[r][c] == playerRed){
-        status.innerText = "Red Wins";
+        currStatus.innerText = "Red Wins";
     }
     else{
-        status.innerText = "Yellow Wins";
+        currStatus.innerText = "Yellow Wins";
     }
 
     gameOver = true;

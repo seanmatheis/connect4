@@ -6,6 +6,7 @@ body{
 #board{
     height: 540px;
     width: 630px;
+    margin: auto;
 
     background-color: blue;
     border: 10px solid navy;
