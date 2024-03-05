@@ -1,0 +1,48 @@
+a{
+    text-decoration: none;
+    color: red;
+}
+
+h1{
+    text-align: center;
+    color: red;
+}
+#button{
+    text-align: center;
+    float: left;
+}
+#button button{
+    display: block;
+    text-align: center;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    width: 300px;
+    margin-left: -160px;
+    padding: 10;
+    font-size: 72;
+    background-color: blue;
+    color: red;
+    border-radius: 25px;
+    
+}
+
+#colorSelect{
+    display: inline;
+    margin-top: 350px;
+    text-align: center;
+    float: left;
+    width: 100%;
+    list-style: none;
+}
+
+#colorSelectUL li{
+    float: left;
+    display: inline !important;
+    text-align: center;
+    width: 50%;
+    margin-top: 25px;
+}
+
+
+

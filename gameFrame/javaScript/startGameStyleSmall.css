@@ -1,0 +1,30 @@
+a{
+    text-decoration: none;
+    color: red;
+}
+
+h1{
+    text-align: center;
+    color: red;
+}
+
+#button{
+    text-align: center;
+    color: white;
+}
+
+#button h3{
+    position: absolute;
+    top: 10%;
+    left: 40%;
+    width: 300;
+    padding: 10;
+    font-size: 72;
+    background-color: blue;
+    border-radius: 25px;
+    
+}
+
+#colorSelect{
+    display: inline;
+}
