@@ -34,7 +34,16 @@ var columns = 7;
 
 
 window.onload = function(){
-    changeStatus("Your Turn");
+    //Update status bar
+    if(currPlayer == physicalPlayer){
+        changeStatus("Opponent's Turn");
+    }
+    else if(currPlayer == remotePlayer){
+        changeStatus("Your Turn");
+    }
+    else{
+        changeStatus("Error");
+    }
     setGame();
 }
 
@@ -88,20 +97,35 @@ function setPiece(){
     let tile = document.getElementById(r.toString() + "-" + c.toString());
     //Assign color to board position
     if(currPlayer == playerRed){
-        changeStatus("Red piece being placed");
-        sleep(2000);
         tile.classList.add("red-piece");
-        changeStatus("Linear Actuator moving back to home position");
-        sleep(2000);
         //Switch current player turn
         currPlayer = playerYellow;
-        changeStatus("Opponent's Turn");
+
+        //Update status bar
+        if(currPlayer == physicalPlayer){
+            changeStatus("Opponent's Turn");
+        }
+        else if(currPlayer == remotePlayer){
+            changeStatus("Your Turn");
+        }
+        else{
+            changeStatus("Error");
+        }
     }
     else{
         tile.classList.add("yellow-piece");
         //Swith current player turn
         currPlayer = playerRed;
-        changeStatus("Your Turn");
+        //Update status bar
+        if(currPlayer == physicalPlayer){
+            changeStatus("Opponent's Turn");
+        }
+        else if(currPlayer == remotePlayer){
+            changeStatus("Your Turn");
+        }
+        else{
+            changeStatus("Error");
+        }
     }
 
     //Decrement row position so that next piece is placed on top
