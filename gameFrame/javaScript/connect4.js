@@ -1,10 +1,28 @@
-
 console.log("TEST");
 
 var playerRed = "R";
 var playerYellow = "Y";
+
+//Assigns selected color to remote player
+/*
+var remoteColor = document.getElementsByName("remoteColor");
+if(remoteColor[0].checked)
+{console.log("Red");}
+else if(remoteColor[1].checked)
+{console.log("Yellow")}
+else{console.log("ERROR")}*/
+
+/*
+var qs = new Querystring();
+var remoteColor = qs.get("remoteColor");
+console.log(remoteColor);*/
+
 //Later this will be decided by the first person to place a piece
 var currPlayer = playerRed;
+
+//Currently Red == remote, yellow == physical
+var remotePlayer = playerRed;
+var physicalPlayer = playerYellow;
 
 var gameOver = false;
 //Array that represents the board
@@ -13,13 +31,12 @@ var board;
 //Array use to represent current row (5 first, then counting down)
 var currColumns;
 
-
-
 var rows = 6;
 var columns = 7;
 
 
 window.onload = function(){
+    changeStatus("Your Turn");
     setGame();
 }
 
@@ -73,14 +90,20 @@ function setPiece(){
     let tile = document.getElementById(r.toString() + "-" + c.toString());
     //Assign color to board position
     if(currPlayer == playerRed){
+        changeStatus("Red piece being placed");
+        sleep(2000);
         tile.classList.add("red-piece");
+        changeStatus("Linear Actuator moving back to home position");
+        sleep(2000);
         //Switch current player turn
         currPlayer = playerYellow;
+        changeStatus("Opponent's Turn");
     }
     else{
         tile.classList.add("yellow-piece");
         //Swith current player turn
         currPlayer = playerRed;
+        changeStatus("Your Turn");
     }
 
     //Decrement row position so that next piece is placed on top
@@ -145,6 +168,15 @@ function checkWinner(){
 }
 
 function setWinner(r, c){
+
+    if(board[r][c] == playerRed){
+        changeStatus("Red Wins");
+    }
+    else{
+        changeStatus("Yellow Wins")
+    }
+
+    /*
     //Change to status instead of just winner
     let currStatus = document.getElementById("currStatus");
     if(board[r][c] == playerRed){
@@ -152,7 +184,18 @@ function setWinner(r, c){
     }
     else{
         currStatus.innerText = "Yellow Wins";
-    }
+    }*/
 
     gameOver = true;
 }
+
+function changeStatus(status){
+    let currStatus = document.getElementById("currStatus");
+    currStatus.innerText = status;
+}
+
+function sleep(ms) {
+    console.log("Sleep Function called");
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  

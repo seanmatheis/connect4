@@ -2,34 +2,29 @@
 <head>
     <style>
     </style>
-    <link rel="stylesheet" media="(max-width: 450px)" href="staticstartGameStyleSmall.css" />
+    <link rel="stylesheet" media="(max-width: 450px)" href="startGameStyleSmall.css" />
     <link rel="stylesheet" media="(min-width: 451px)" href="startGameStyleLarge.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
+    <form action="connect4.html">
     <h1>Connect 4</h1>
         <div id="button"><a href = "connect4.html">
             <button>Start Game</button></a><br>
         </div>
         <div id = "colorSelect">
-            <h3>Choose Your Color</h3>
-            <ul id = "colorSelectUL">
-                <div id = "redButton">
-                <li>
-                    <input type="radio" id="red" name="userColor" value="red">
-                    <label for="red">Red</label>
-                </li>
-                </div>
-                <div id="yellowButton">
-                <li>
-                    <input type="radio" id="yellow" name="userColor" value="yellow">
-                    <label for="yellow">Yellow</label>
-                </li>
-                </div>
-            </ul>
+            <nav>
+                <input type="radio" id="red" name="remoteColor" checked = "checked" value = "red"/>
+                <label for="red">Red</label>
+                
+                <input type="radio" id="yellow" name="remoteColor" value="yellow"/>
+                <label for="yellow">Yellow</label>
+                
+            </nav>
         </div>
     </a>
+</form>
 </body>
 </html>
