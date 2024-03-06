@@ -5,7 +5,7 @@ a{
 
 h1{
     text-align: center;
-    color: red;
+    color: blue;
 }
 #button{
     text-align: center;
@@ -18,7 +18,7 @@ h1{
     top: 10%;
     left: 50%;
     width: 300px;
-    margin-left: -160px;
+    margin-left: -150px;
     padding: 10;
     font-size: 72;
     background-color: blue;
@@ -26,6 +26,23 @@ h1{
     border-radius: 25px;
     
 }
+
+#button button:hover{
+    display: block;
+    text-align: center;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+    padding: 10;
+    font-size: 72;
+    background-color: blue;
+    color: red;
+    border-radius: 25px;
+    border: 5px solid red;
+    
+} 
 
 #colorSelect{
     display: inline;
@@ -40,6 +57,8 @@ h1{
 nav{
     width: fit-content;
     height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
     border: 1px solid #666;
     border-radius: 4px;
     overflow: hidden;

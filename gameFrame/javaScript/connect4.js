@@ -3,26 +3,24 @@ console.log("TEST");
 var playerRed = "R";
 var playerYellow = "Y";
 
-//Assigns selected color to remote player
-/*
-var remoteColor = document.getElementsByName("remoteColor");
-if(remoteColor[0].checked)
-{console.log("Red");}
-else if(remoteColor[1].checked)
-{console.log("Yellow")}
-else{console.log("ERROR")}*/
+//Get selected color from previous page
+const queryString = window.location.search;
+console.log(queryString);
+const urlParams = new URLSearchParams(queryString);
+const remoteColor = urlParams.get('remoteColor');
+console.log(remoteColor);
 
-/*
-var qs = new Querystring();
-var remoteColor = qs.get("remoteColor");
-console.log(remoteColor);*/
-
-//Later this will be decided by the first person to place a piece
-var currPlayer = playerRed;
-
-//Currently Red == remote, yellow == physical
-var remotePlayer = playerRed;
-var physicalPlayer = playerYellow;
+//Assign correct color to remote player
+if(remoteColor == "red"){
+    var currPlayer = playerRed;
+    var remotePlayer = playerRed;
+    var physicalPlayer = playerYellow;
+}
+else{
+    var currPlayer = playerYellow;
+    var remotePlayer = playerYellow;
+    var physicalPlayer = playerRed;
+}
 
 var gameOver = false;
 //Array that represents the board
