@@ -67,14 +67,14 @@ function setGame(){
             tile.id = r.toString() + "-" + c.toString();
             tile.classList.add("tile");
             //Currently position is assigned by clicking the column, later switch to buttons??
-            tile.addEventListener("click", setPiece)
+            tile.addEventListener("click", setPieceRemote)
             document.getElementById("board").append(tile);
         }
         board.push(row);
     }
 }
 
-function setPiece(){
+function setPieceRemote(){
     console.log("click");
     if(gameOver){
         return;
