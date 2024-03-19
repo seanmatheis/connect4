@@ -11,5 +11,26 @@
     <h1>Connect 4</h1>
     <h2 id="currStatus"></h2>
     <div id = "board"></div>
+    <script>
+
+        socket.onmessage = function(event){
+            console.log(event.data);
+            const data = event.data.split(":");
+
+            const msg = data[0] || "";
+            const sensor = data[1] || "";
+
+
+
+        };
+
+        function toggleRed(){
+            socket.send("Red:led:esp:localhost");
+        }
+
+        function toggleYellow(){
+            socket.send("Yellow:led:esp:localhost");
+        }
+    </script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 console.log("TEST");
 
+var socket = new WebSocket('ws://10.0.0.61:81');
+
 var playerRed = "R";
 var playerYellow = "Y";
 
@@ -97,6 +99,7 @@ function setPieceRemote(){
     let tile = document.getElementById(r.toString() + "-" + c.toString());
     //Assign color to board position
     if(currPlayer == playerRed){
+        socket.send("Red:led:esp:localhost");
         tile.classList.add("red-piece");
         //Switch current player turn
         currPlayer = playerYellow;
@@ -113,6 +116,7 @@ function setPieceRemote(){
         }
     }
     else{
+        socket.send("Yellow:led:esp:localhost");
         tile.classList.add("yellow-piece");
         //Swith current player turn
         currPlayer = playerRed;
