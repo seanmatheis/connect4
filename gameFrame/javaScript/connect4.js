@@ -1,27 +1,32 @@
-console.log("TEST");
-
-var socket = new WebSocket('ws://10.0.0.61:81');
+//var socket = new WebSocket('ws://10.0.0.61:81');
+//socket.send("Connected to Game");
 
 var playerRed = "R";
 var playerYellow = "Y";
 
+//Random Starting Player
+let startingPlayer = Math.round(Math.random());
+console.log(startingPlayer);
+
+//Virtual Player == red, remote == yellow
+var remotePlayer = playerRed;
+var physicalPlayer = playerYellow;
+
 //Get selected color from previous page
+//GET RID OF PREVIOUS PAGE
 const queryString = window.location.search;
 console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const remoteColor = urlParams.get('remoteColor');
 console.log(remoteColor);
 
+
 //Assign correct color to remote player
-if(remoteColor == "red"){
+if(startingPlayer == 0){
     var currPlayer = playerRed;
-    var remotePlayer = playerRed;
-    var physicalPlayer = playerYellow;
 }
 else{
     var currPlayer = playerYellow;
-    var remotePlayer = playerYellow;
-    var physicalPlayer = playerRed;
 }
 
 var gameOver = false;
@@ -78,6 +83,7 @@ function setGame(){
 
 function setPieceRemote(){
     console.log("click");
+    //socket.send("Click");
     if(gameOver){
         return;
     }
@@ -96,10 +102,11 @@ function setPieceRemote(){
     }
     //Assign board position to the current player
     board[r][c] = currPlayer;
+    console.log(c);
     let tile = document.getElementById(r.toString() + "-" + c.toString());
     //Assign color to board position
     if(currPlayer == playerRed){
-        socket.send("Red:led:esp:localhost");
+        //socket.send("Red:led:esp:localhost");
         tile.classList.add("red-piece");
         //Switch current player turn
         currPlayer = playerYellow;
@@ -116,7 +123,7 @@ function setPieceRemote(){
         }
     }
     else{
-        socket.send("Yellow:led:esp:localhost");
+        //socket.send("Yellow:led:esp:localhost");
         tile.classList.add("yellow-piece");
         //Swith current player turn
         currPlayer = playerRed;
