@@ -74,7 +74,7 @@ function setGame(){
             tile.id = r.toString() + "-" + c.toString();
             tile.classList.add("tile");
             //Currently position is assigned by clicking the column, later switch to buttons??
-            tile.addEventListener("click", setPieceRemote)
+            tile.addEventListener("click", setPieceRemote);
             document.getElementById("board").append(tile);
         }
         board.push(row);
@@ -100,12 +100,13 @@ function setPieceRemote(){
         //invalid move
         return;
     }
-    //Assign board position to the current player
-    board[r][c] = currPlayer;
-    console.log(c);
-    let tile = document.getElementById(r.toString() + "-" + c.toString());
     //Assign color to board position
     if(currPlayer == playerRed){
+
+        //Assign board position to the current player
+        board[r][c] = currPlayer;
+        console.log(c);
+        let tile = document.getElementById(r.toString() + "-" + c.toString());
         //socket.send("Red:led:esp:localhost");
         tile.classList.add("red-piece");
         //Switch current player turn
@@ -122,22 +123,7 @@ function setPieceRemote(){
             changeStatus("Error");
         }
     }
-    else{
-        //socket.send("Yellow:led:esp:localhost");
-        tile.classList.add("yellow-piece");
-        //Swith current player turn
-        currPlayer = playerRed;
-        //Update status bar
-        if(currPlayer == physicalPlayer){
-            changeStatus("Opponent's Turn");
-        }
-        else if(currPlayer == remotePlayer){
-            changeStatus("Your Turn");
-        }
-        else{
-            changeStatus("Error");
-        }
-    }
+
 
     //Decrement row position so that next piece is placed on top
     r -= 1;
@@ -145,6 +131,11 @@ function setPieceRemote(){
 
     //Check for winner
     checkWinner();
+}
+
+function setPiecePhysical(){
+
+
 }
 
 function checkWinner(){
