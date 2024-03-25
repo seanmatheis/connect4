@@ -10,6 +10,7 @@ var physicalPlayer = playerYellow;
 
 var startingPlayer;
 var currPlayer;
+var winner;
 
 //Get selected color from previous page
 //GET RID OF PREVIOUS PAGE
@@ -94,6 +95,39 @@ function setGame(){
     }
 }
 
+function resetGame(){
+
+    //Reset board
+    gameOver = false
+    board = [];
+    currColumns = [5, 5, 5, 5, 5, 5, 5];
+
+
+    for(let r = 0; r < rows; r++)
+    {
+        let row = [];
+
+        for(let c = 0; c < columns; c++)
+        {
+            row.push(' ');
+
+            //<div id="0-0" class = "tile"></div>
+            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            //Remove class id
+            tile.classList.remove("red-piece");
+            tile.classList.remove("yellow-piece");
+
+        }
+        board.push(row);
+    }
+
+    if(currPlayer == playerYellow)
+    {
+        setPiecePhysical();
+    }
+}
+
+
 function setPieceRemote(){
     console.log("click");
     //socket.send("Click");
@@ -152,7 +186,9 @@ function setPieceRemote(){
 
 function setPiecePhysical(){
 
-    console.log("Test");
+    if(gameOver){
+        return;
+    }
 
     //Set invalid sensor value until correct value is recieved
     sensorValue = 8;
@@ -270,10 +306,10 @@ function checkWinner(){
 function setWinner(r, c){
 
     if(board[r][c] == playerRed){
-        changeStatus("Red Wins");
+        winner = "Red Wins";
     }
     else{
-        changeStatus("Yellow Wins")
+        winner = "Yellow Wins";
     }
 
     /*
@@ -287,11 +323,68 @@ function setWinner(r, c){
     }*/
 
     gameOver = true;
+
+    //Add implementation for restart button
+    createRestartButton(winner);
+
 }
 
 function changeStatus(status){
     let currStatus = document.getElementById("currStatus");
     currStatus.innerText = status;
+}
+
+function createRestartButton(winner){
+
+    let currStatus = document.getElementById("currStatus");
+    currStatus.innerText = winner + " - Restart Game";
+    if(winner == "Red Wins"){
+        currStatus.classList.add('redWinsRestart');
+    }
+    else{
+        currStatus.classList.add('yellowWinsRestart');
+    }
+
+    //Add event listener, user can restart game
+    currStatus.addEventListener("click", restartGame);
+
+}
+
+function restartGame(winner){
+
+    //Remove event listener to restart game
+    let currStatus = document.getElementById("currStatus");
+    currStatus.removeEventListener("click", restartGame);
+
+    //Remove button formatting
+    currStatus.classList.remove('yellowWinsRestart');
+    currStatus.classList.remove('redWinsRestart');
+
+
+    //Call onload function again
+    //Decide Starting player randomly 
+    startingPlayer = Math.round(Math.random());
+    console.log(startingPlayer);
+
+    //Assign correct color to remote player
+    if(startingPlayer == 0){
+        currPlayer = playerRed;
+    }
+    else{
+        currPlayer = playerYellow;
+    }
+
+    //Update status bar
+    if(currPlayer == physicalPlayer){
+        changeStatus("Opponent's Turn");
+    }
+    else if(currPlayer == remotePlayer){
+        changeStatus("Your Turn");
+    }
+    else{
+        changeStatus("Error");
+    }
+    resetGame();
 }
 
   
