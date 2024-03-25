@@ -4,30 +4,22 @@
 var playerRed = "R";
 var playerYellow = "Y";
 
-//Random Starting Player
-let startingPlayer = Math.round(Math.random());
-console.log(startingPlayer);
-
 //Virtual Player == red, remote == yellow
 var remotePlayer = playerRed;
 var physicalPlayer = playerYellow;
 
+var startingPlayer;
+var currPlayer;
+
 //Get selected color from previous page
 //GET RID OF PREVIOUS PAGE
+/*
 const queryString = window.location.search;
 console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const remoteColor = urlParams.get('remoteColor');
-console.log(remoteColor);
+console.log(remoteColor);*/
 
-
-//Assign correct color to remote player
-if(startingPlayer == 0){
-    var currPlayer = playerRed;
-}
-else{
-    var currPlayer = playerYellow;
-}
 
 var gameOver = false;
 //Array that represents the board
@@ -39,8 +31,24 @@ var currColumns;
 var rows = 6;
 var columns = 7;
 
+//Initialize sensor value to invalid position
+var sensorValue = 8;
+
 
 window.onload = function(){
+
+    //Decide Starting player randomly 
+    startingPlayer = Math.round(Math.random());
+    console.log(startingPlayer);
+
+    //Assign correct color to remote player
+    if(startingPlayer == 0){
+        currPlayer = playerRed;
+    }
+    else{
+        currPlayer = playerYellow;
+    }
+
     //Update status bar
     if(currPlayer == physicalPlayer){
         changeStatus("Opponent's Turn");
@@ -78,6 +86,11 @@ function setGame(){
             document.getElementById("board").append(tile);
         }
         board.push(row);
+    }
+
+    if(currPlayer == playerYellow)
+    {
+        setPiecePhysical();
     }
 }
 
@@ -131,10 +144,73 @@ function setPieceRemote(){
 
     //Check for winner
     checkWinner();
+
+    //Call function that places remote player's piece
+    setPiecePhysical();
+    
 }
 
 function setPiecePhysical(){
 
+    console.log("Test");
+
+    //Set invalid sensor value until correct value is recieved
+    sensorValue = 8;
+
+    //While loop waits until value from sensor is received
+    while(sensorValue == 8){
+        //Eventually get value from websocket, currently randomly generated
+        c = randSensorValue();
+        sensorValue = c;
+    }
+
+
+    //Row is defined by gravity
+    r = currColumns[c];
+    if (r < 0){
+        //invalid move
+        return;
+    }
+
+    //Assign color to board position
+    if(currPlayer == playerYellow){
+
+        //Assign board position to the current player
+        board[r][c] = currPlayer;
+        console.log(c);
+        let tile = document.getElementById(r.toString() + "-" + c.toString());
+        //socket.send("Red:led:esp:localhost");
+        tile.classList.add("yellow-piece");
+        //Switch current player turn
+        currPlayer = playerRed;
+
+        //Update status bar
+        if(currPlayer == physicalPlayer){
+            changeStatus("Opponent's Turn");
+        }
+        else if(currPlayer == remotePlayer){
+            changeStatus("Your Turn");
+        }
+        else{
+            changeStatus("Error");
+        }
+    }
+
+
+    //Decrement row position so that next piece is placed on top
+    r -= 1;
+    currColumns[c] = r;
+
+    //Check for winner
+    checkWinner();
+
+
+}
+
+//temp function to generate random position, simulates sensor readings
+function randSensorValue(){
+
+    return Math.floor(Math.random() * (7));
 
 }
 
@@ -218,8 +294,4 @@ function changeStatus(status){
     currStatus.innerText = status;
 }
 
-function sleep(ms) {
-    console.log("Sleep Function called");
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
   
