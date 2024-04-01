@@ -3,12 +3,12 @@
 
 using namespace websockets;
 WebsocketsClient socket;
-const char* websocketServer = "ws://10.0.0.61:81/";
+const char* websocketServer = "ws://172.20.10.3:81/";
 boolean connected = false;
 const int ledPin = 5;
 
-const char* ssid = "MeatOrchard"; 
-const char* password = "polloshermanos42069";
+const char* ssid = "SeanPhone"; 
+const char* password = "iamspeed";
 
 //Global Variables meant to be shared wit system
 String data;

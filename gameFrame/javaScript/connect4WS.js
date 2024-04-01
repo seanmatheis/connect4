@@ -1,4 +1,6 @@
-var socket = new WebSocket('ws://10.0.0.61:81');
+console.log("TEST");
+
+var socket = new WebSocket('ws://172.20.10.3:81');
 socket.onmessage = function(event){
     console.log(event.data);
 }
