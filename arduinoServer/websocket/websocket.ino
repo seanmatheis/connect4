@@ -11,15 +11,23 @@ const char* ssid = "SeanPhone";
 const char* password = "iamspeed";
 
 //Global Variables meant to be shared wit system
-String data;
+//data from server
+String dataServer;
+//data from mega
+String dataMega;
+String bitstream;
 int currPlayer;
 int winner;
 int LinActPos;
-int sensorValue;
+char sensorValue;
+char player2Ready;
+char player1Ready;
+int readyButton = 1;
 
 
 void setup() {
   Serial.begin(115200);
+  Serial2.begin(9600, SERIAL_8N1, 16, 17);
   connectWiFi();
   connectWebSocket();
 
@@ -32,15 +40,60 @@ void setup() {
 
   Serial.print("Setup Complete");
 
+  //Take out later
+  currPlayer = 2;
+/*
+  while(!connected) { 
+    Serial.println("Connecting to WebSocket server");
+    connectWebSocket();
+    delay(2000);
+  }*/
+
+  //Wait for ready signal from physical player
+  while(player2Ready != '1'){
+    dataMega = Serial2.readString();
+    player2Ready = dataMega[5];
+  }
+
 }
 
 void loop() {
-  if(!connected) { 
-    Serial.println("Connecting to WebSocket server");
-    connectWebSocket();
+
+
+
+
+
+//Current player - physical player, read from mega
+  if(currPlayer == 0){
+
+    //dataMega = Serial2.readString();
+    //Test with random number
+    //Get data from mega
+    //dataMega = "<0006000>";
+    //sensorValue = dataMega[4];
+
+    //Send sensor data to websocket
+    //dataServer[4] = sensorValue;
+    //socket.send(dataServer);
+  }
+  //Current Player - remote player read from server n
+  else if(currPlayer == 1){
+    socket.poll();
+    delay(2000);
+  }
+  //Current Player - undefined
+  else{
+    //Initialize data packets
+    dataServer = "<02001100>";
+
   }
 
-  socket.poll();
+  //socket.send(dataServer);
+  //Serial2.println(dataServer);
+  Serial.println(dataServer);
+  Serial2.println(dataServer);
+  //Serial.println(dataMega);
+  delay(3000);
 
 
 
@@ -48,8 +101,9 @@ void loop() {
 
 void handleMessage(WebsocketsMessage message){
   Serial.println(message.data());
-  String data = message.data();
-  parseData(data);
+  Serial2.println(message.data());
+  String dataServer = message.data();
+  parseData(dataServer);
 
 
 }
@@ -86,20 +140,13 @@ void connectWiFi() {
   Serial.print("IP address: "); Serial.println(WiFi.localIP());
 }
 
-void parseData(String data){
+void parseData(String dataServer){
 
-  const char * c = data.c_str();
-  Serial.println(c);
+  currPlayer = dataServer[1] - '0';
+  winner = dataServer[2] - '0';
+  LinActPos = dataServer[3] - '0';
 
-  String varName;
-  int value;
-
-  sscanf(c, "%s:%d", varName, value);
-
-  Serial.println(varName);
-  Serial.println(value);
-  Serial.println("Variable updated");
-
+  Serial2.println(dataServer);
 
 
 }

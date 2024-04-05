@@ -1,16 +1,31 @@
-console.log("TEST");
-
-var socket = new WebSocket('ws://172.20.10.3:81');
+var socket = new WebSocket('ws://172.20.10.3:81/');
 socket.onmessage = function(event){
     console.log(event.data);
+
+    let dataESP = event.data;
+    if(dataESP.charAt(1) == 1){
+        sensorValue = dataESP.charAt(4);
+        if(currPlayer == playerYellow)
+        {
+            setPiecePhysical();
+        }
+    }
+
+    /*
+    //Get sensor value from incoming data
+    if(dataESP.charAt(4) >= 0 && dataESP.charAt(4) <=6){
+        sensorValue = dataESP.charAt(4);
+        console.log(`Sensor Value:  ${sensorValue}`);
+    }*/
 }
 
 //WEBSOCKET COMM: 
 //BIT 0: Current Player's turn (currPlayer) physicalPlayer = 0, remotePlayer = 1;
-//BIT 1: Winner (winner) physicalPlayer = 0, remotePlayer = 1, none = 2;
+//BIT 1: Winner (winner) physicalPlayer = 0, remotePlayer = 1, draw = 2, none = 3;
 //Bit 2: Linear Actuator Position (linActPos) 0-7
 //Bit 3: Value read from sensor (sensorValue) 0-7
-let bitstreamSize = 32;
+//Bit 4: Ready (ready) not ready = 0, ready = 1
+let bitstreamSize = 8;
 bitstream = new Array(bitstreamSize).fill(0);
 
 var playerRed = "R";
@@ -21,9 +36,14 @@ var remotePlayer = playerRed;
 var physicalPlayer = playerYellow;
 
 var startingPlayer;
+
+//Variables for bitstream
 var currPlayer;
 var winner;
 var linActPos;
+var sensorValue;
+var physicalReady;
+var remoteReady;
 
 var gameOver = false;
 //Array that represents the board
@@ -35,8 +55,7 @@ var currColumns;
 var rows = 6;
 var columns = 7;
 
-//Initialize sensor value to invalid position
-var sensorValue;
+
 
 
 window.onload = function(){
@@ -52,9 +71,9 @@ window.onload = function(){
         currPlayer = playerRed;
     }
 
-    
+    //Create start button, display until remote player is ready
+    createStartButton();
 
-    setGame();
 }
 
 
@@ -62,6 +81,12 @@ window.onload = function(){
 function setGame(){
     board = [];
     currColumns = [5, 5, 5, 5, 5, 5, 5];
+
+    //Remove event listener to restart game
+    let currStatus = document.getElementById("currStatus");
+    currStatus.removeEventListener("click", remoteReadyToggle);
+    currStatus.classList.remove('startButton');
+
 
 
     for(let r = 0; r < rows; r++)
@@ -82,19 +107,30 @@ function setGame(){
         }
         board.push(row);
     }
-
+    
     //initialize linear actuator position
     linActPos = 8;
 
     //Initialize sensor value to invalid value
-    sensorValue = 8;
+    sensorValue = 0;
 
-    if(currPlayer == playerYellow)
-    {
-        setPiecePhysical();
-    }
+    //Initialize ready status
+    remoteReady = 0;
+    physicalReady = 1;
 
-    sendBitstream();
+    
+
+
+
+
+    //Update status bar
+    updatePlayerAndSendData();
+
+    /*
+    while(physicalPlayer != 1){
+
+    }*/
+
 }
 
 function resetGame(){
@@ -125,10 +161,11 @@ function resetGame(){
     }
 
 
+    /*
     if(currPlayer == playerYellow)
     {
         setPiecePhysical();
-    }
+    }*/
 }
 
 
@@ -144,7 +181,6 @@ function setPieceRemote(){
     let c = parseInt(coords[1]);
 
     linActPos = c;
-    sendBitstream();
 
     //Row is defined by gravity
     r = currColumns[c];
@@ -173,8 +209,9 @@ function setPieceRemote(){
     //Check for winner
     checkWinner();
 
-    //Call function that places remote player's piece
-    setPiecePhysical();
+    //Update bitstream to esp
+    sendBitstream();
+
     
 }
 
@@ -184,17 +221,19 @@ function setPiecePhysical(){
         return;
     }
 
+    /*
     //Set invalid sensor value until correct value is recieved
     sensorValue = 8;
-    sendBitstream();
+    //sendBitstream();
 
     //While loop waits until value from sensor is received
     while(sensorValue == 8){
         //Eventually get value from websocket, currently randomly generated
-        c = randSensorValue();
-        sensorValue = c;
-    }
+        c = Math.floor(Math.random()*7);
+    }*/
 
+
+    c = sensorValue;
 
     //Row is defined by gravity
     r = currColumns[c];
@@ -334,6 +373,18 @@ function createRestartButton(winner){
 
 }
 
+function createStartButton(){
+    let currStatus = document.getElementById("currStatus");
+    currStatus.innerText = "Start Game";
+    currStatus.classList.add('startButton');
+    currStatus.addEventListener("click", remoteReadyToggle);
+}
+
+function remoteReadyToggle(){
+    remoteReady = 1;
+    setGame();
+    sendBitstream();
+}
 function restartGame(winner){
 
     //Remove event listener to restart game
@@ -377,6 +428,7 @@ function updatePlayerAndSendData(){
 
 }
 
+
 function sendBitstream(){
 
     let currPlayerString;
@@ -391,6 +443,8 @@ function sendBitstream(){
     bitstream[0] = currPlayerString;
     bitstream[1] = winnerString;
     bitstream[2] = linActPos;
+    bitstream[4] = physicalReady; 
+    bitstream[5] = remoteReady;
 
 
     let message = "<";

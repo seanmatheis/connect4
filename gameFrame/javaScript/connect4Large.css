@@ -50,3 +50,12 @@ body{
     color: yellow;
     border-radius: 25px;
 }
+
+.startButton{
+    display: inline;
+    margin-bottom: 10;
+    padding: 10;
+    background-color: blue;
+    color: white;
+    border-radius: 25px;
+}
