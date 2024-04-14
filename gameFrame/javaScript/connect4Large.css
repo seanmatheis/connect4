@@ -26,11 +26,12 @@ body{
 }
 
 .red-piece{
-    background-color: red;
+    background-color: yellow;
+    
 }
 
 .yellow-piece{
-    background-color: yellow;
+    background-color: red;
 }
 
 .redWinsRestart{
@@ -38,7 +39,7 @@ body{
     margin-bottom: 10;
     padding: 10;
     background-color: blue;
-    color: red;
+    color: yellow;
     border-radius: 25px;
 }
 
@@ -47,7 +48,7 @@ body{
     margin-bottom: 10;
     padding: 10;
     background-color: blue;
-    color: yellow;
+    color: red;
     border-radius: 25px;
 }
 

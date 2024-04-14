@@ -18,7 +18,7 @@ class MyWebSocket implements MessageComponentInterface{
         $this->clients->attach($conn);
         $this->connectedClients[$conn->resourceId] = $conn;
         echo "New Connection ({$conn->resourceId}) \n";
-        $conn->send("Welcome to the Server.");
+        //$conn->send("Welcome to the Server.");
     }
 
     public function onMessage(ConnectionInterface $from, $msg){

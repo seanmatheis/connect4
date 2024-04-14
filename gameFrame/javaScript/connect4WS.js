@@ -3,11 +3,23 @@ socket.onmessage = function(event){
     console.log(event.data);
 
     let dataESP = event.data;
+    //If opponent move, place physical piece
     if(dataESP.charAt(1) == 1){
         sensorValue = dataESP.charAt(4);
         if(currPlayer == playerYellow)
         {
             setPiecePhysical();
+        }
+    }
+
+    //If both players are ready set the game
+    if(dataESP.charAt(5) == 1 && gameSet == 0){
+        physicalReady = dataESP.charAt(5);
+        if(physicalReady == 1 && remoteReady == 1)
+        {
+            setGame();
+            sendBitstream();
+            gameSet = 1;
         }
     }
 
@@ -22,9 +34,10 @@ socket.onmessage = function(event){
 //WEBSOCKET COMM: 
 //BIT 0: Current Player's turn (currPlayer) physicalPlayer = 0, remotePlayer = 1;
 //BIT 1: Winner (winner) physicalPlayer = 0, remotePlayer = 1, draw = 2, none = 3;
-//Bit 2: Linear Actuator Position (linActPos) 0-7
-//Bit 3: Value read from sensor (sensorValue) 0-7
-//Bit 4: Ready (ready) not ready = 0, ready = 1
+//Bit 2: Linear Actuator Position (linActPos) 0-6
+//Bit 3: Value read from sensor (sensorValue) 0-6
+//Bit 4-5: Ready (ready) not ready = 0, ready = 1
+//Bit 6: Restart
 let bitstreamSize = 8;
 bitstream = new Array(bitstreamSize).fill(0);
 
@@ -32,8 +45,8 @@ var playerRed = "R";
 var playerYellow = "Y";
 
 //Virtual Player == red, remote == yellow
-var remotePlayer = playerRed;
-var physicalPlayer = playerYellow;
+var remotePlayer = playerYellow;
+var physicalPlayer = playerRed;
 
 var startingPlayer;
 
@@ -46,6 +59,7 @@ var physicalReady;
 var remoteReady;
 
 var gameOver = false;
+var gameSet;
 //Array that represents the board
 var board;
 
@@ -72,8 +86,14 @@ window.onload = function(){
     }
 
     //Create start button, display until remote player is ready
+    physicalReady = 0;
+    remoteReady = 0;
+    linActPos = 8;
+    sensorValue = 0;
+    gameSet = 0;
+    restart = 1;
+    sendBitstream();
     createStartButton();
-
 }
 
 
@@ -107,16 +127,9 @@ function setGame(){
         }
         board.push(row);
     }
-    
-    //initialize linear actuator position
-    linActPos = 8;
 
-    //Initialize sensor value to invalid value
-    sensorValue = 0;
 
     //Initialize ready status
-    remoteReady = 0;
-    physicalReady = 1;
 
     
 
@@ -126,10 +139,6 @@ function setGame(){
     //Update status bar
     updatePlayerAndSendData();
 
-    /*
-    while(physicalPlayer != 1){
-
-    }*/
 
 }
 
@@ -170,6 +179,8 @@ function resetGame(){
 
 
 function setPieceRemote(){
+
+
     if(gameOver){
         return;
     }
@@ -221,17 +232,6 @@ function setPiecePhysical(){
         return;
     }
 
-    /*
-    //Set invalid sensor value until correct value is recieved
-    sensorValue = 8;
-    //sendBitstream();
-
-    //While loop waits until value from sensor is received
-    while(sensorValue == 8){
-        //Eventually get value from websocket, currently randomly generated
-        c = Math.floor(Math.random()*7);
-    }*/
-
 
     c = sensorValue;
 
@@ -262,6 +262,7 @@ function setPiecePhysical(){
 
     //Check for winner
     checkWinner();
+
 
 
 }
@@ -329,10 +330,10 @@ function checkWinner(){
 function setWinner(r, c){
 
     if(board[r][c] == playerRed){
-        winner = "Red Wins";
+        winner = "Yellow Wins";
     }
     else{
-        winner = "Yellow Wins";
+        winner = "Red Wins";
     }
 
     /*
@@ -346,6 +347,7 @@ function setWinner(r, c){
     }*/
 
     gameOver = true;
+    sendBitstream();
 
     //Add implementation for restart button
     createRestartButton(winner);
@@ -361,11 +363,11 @@ function createRestartButton(winner){
 
     let currStatus = document.getElementById("currStatus");
     currStatus.innerText = winner + " - Restart Game";
-    if(winner == "Red Wins"){
-        currStatus.classList.add('redWinsRestart');
+    if(winner == "Yellow Wins"){
+        currStatus.classList.add('yellowWinsRestart');
     }
     else{
-        currStatus.classList.add('yellowWinsRestart');
+        currStatus.classList.add('redWinsRestart');
     }
 
     //Add event listener, user can restart game
@@ -381,12 +383,24 @@ function createStartButton(){
 }
 
 function remoteReadyToggle(){
+    let currStatus = document.getElementById("currStatus");
     remoteReady = 1;
-    setGame();
+    if(remoteReady == 1 && physicalReady == 1){
+        setGame();
+        restart = 0;
+        gameSet = 1;
+    }
+    else if(physicalReady == 0){
+        currStatus.innerText = "Wait For Opponent";
+        restart = 0;
+    }
     sendBitstream();
 }
 function restartGame(winner){
 
+    window.location.reload();
+
+    /*
     //Remove event listener to restart game
     let currStatus = document.getElementById("currStatus");
     currStatus.removeEventListener("click", restartGame);
@@ -410,7 +424,7 @@ function restartGame(winner){
 
     updatePlayerAndSendData();
 
-    resetGame();
+    resetGame();*/
 }
 
 function updatePlayerAndSendData(){
@@ -445,6 +459,7 @@ function sendBitstream(){
     bitstream[2] = linActPos;
     bitstream[4] = physicalReady; 
     bitstream[5] = remoteReady;
+    bitstream[6] = restart;
 
 
     let message = "<";
