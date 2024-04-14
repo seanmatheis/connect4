@@ -5,12 +5,12 @@
 ## In "C:\xampp\htdocs" create project folder
 
 ## In "C:\xampp\htdocs\projectFolder" add following files from final product folder
-  ### connect4Large.css
-  ### connect4Small.css
-  ### connect4WS.js
-  ### connect4Xsmall.css
-  ### index.php
-  ### websocket.php
+  ### -connect4Large.css
+  ### -connect4Small.css
+  ### -connect4WS.js
+  ### -connect4Xsmall.css
+  ### -index.php
+  ### -websocket.php
 
 ## The files websocketSingleModuleHotspot.ino and websocketSingleModuleHotspotInverted.ino must be uploaded to an ESP32
 ## The file websocketSingleModuleHotspot.ino gives the user the visual experience of playing Connect 4 across from the opponent.
