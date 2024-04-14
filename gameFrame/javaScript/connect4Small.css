@@ -4,8 +4,8 @@ body{
 }
 
 #board{
-    height: 360px;
-    width: 420px;
+    height: 300px;
+    width: 350px;
     margin: auto;
     margin-top: 20px;
 
@@ -16,8 +16,8 @@ body{
 }
 
 .tile{
-    height: 40px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
     margin: 5px;
 
     background-color: white;
@@ -26,11 +26,12 @@ body{
 }
 
 .red-piece{
-    background-color: red;
+    background-color: yellow;
+    
 }
 
 .yellow-piece{
-    background-color: yellow;
+    background-color: red;
 }
 
 .redWinsRestart{
