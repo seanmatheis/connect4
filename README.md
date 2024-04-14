@@ -1,4 +1,4 @@
-# Connect4 Installation Guide
+# **Connect4 Installation Guide**
 
 ## Download XAMPP in C drive - https://www.apachefriends.org/
 
