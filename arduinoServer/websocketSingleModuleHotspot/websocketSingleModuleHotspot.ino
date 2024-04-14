@@ -158,6 +158,13 @@ void loop() {
     remoteReady = '0';
   }
 
+  if(restart == '1'){
+    bothReady = 0;
+    physicalReady = '0';
+    remoteReady = '0';
+    Serial2.println(dataServer);
+  }
+
   socket.poll();
 
 
@@ -211,11 +218,12 @@ void parseData(String dataServer){
   LinActPos = dataServer[3];
   restart = dataServer[7];
 
+/*
   if(restart == '1'){
     bothReady = 0;
     physicalReady = '0';
     remoteReady = '0';
-  }
+  }*/
 
   if(dataServer[6] == '1'){
     remoteReady = '1';
