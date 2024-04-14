@@ -40,5 +40,6 @@
 
 ## The websocket terminal should display that there is a new connection
 ## Turn on the esp32, the terminal will display when the esp32 is connected, this may take around 20-30 seconds
+
 The user interface is now connected to the physical board
 Press start game when ready to play, the game will start when your opponent is also ready.
